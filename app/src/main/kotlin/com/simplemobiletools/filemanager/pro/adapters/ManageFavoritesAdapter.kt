@@ -7,6 +7,7 @@ import com.simplemobiletools.commons.activities.BaseSimpleActivity
 import com.simplemobiletools.commons.adapters.MyRecyclerViewAdapter
 import com.simplemobiletools.commons.interfaces.RefreshRecyclerViewListener
 import com.simplemobiletools.commons.views.MyRecyclerView
+import com.simplemobiletools.commons.views.bottomactionmenu.BottomActionMenuView
 import com.simplemobiletools.filemanager.pro.R
 import com.simplemobiletools.filemanager.pro.extensions.config
 import kotlinx.android.synthetic.main.item_manage_favorite.view.*
@@ -39,11 +40,9 @@ class ManageFavoritesAdapter(
 
     override fun getItemKeyPosition(key: Int) = favorites.indexOfFirst { it.hashCode() == key }
 
-    override fun onActionModeCreated() {}
-
     override fun onActionModeDestroyed() {}
 
-    override fun prepareActionMode(menu: Menu) {}
+    override fun onBottomActionMenuCreated(view: BottomActionMenuView) {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = createViewHolder(R.layout.item_manage_favorite, parent)
 

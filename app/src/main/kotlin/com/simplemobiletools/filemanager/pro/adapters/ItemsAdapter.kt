@@ -32,6 +32,7 @@ import com.simplemobiletools.commons.helpers.*
 import com.simplemobiletools.commons.models.FileDirItem
 import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.views.MyRecyclerView
+import com.simplemobiletools.commons.views.bottomactionmenu.BottomActionMenuView
 import com.simplemobiletools.filemanager.pro.R
 import com.simplemobiletools.filemanager.pro.activities.SimpleActivity
 import com.simplemobiletools.filemanager.pro.activities.SplashActivity
@@ -89,16 +90,18 @@ class ItemsAdapter(
 
     override fun getActionMenuId() = R.menu.cab
 
-    override fun prepareActionMode(menu: Menu) {
-        menu.apply {
-            findItem(R.id.cab_decompress).isVisible = getSelectedFileDirItems().map { it.path }.any { it.isZipFile() }
-            findItem(R.id.cab_confirm_selection).isVisible = isPickMultipleIntent
-            findItem(R.id.cab_copy_path).isVisible = isOneItemSelected()
-            findItem(R.id.cab_open_with).isVisible = isOneFileSelected()
-            findItem(R.id.cab_open_as).isVisible = isOneFileSelected()
-            findItem(R.id.cab_set_as).isVisible = isOneFileSelected()
-            findItem(R.id.cab_create_shortcut).isVisible = isOreoPlus() && isOneItemSelected()
+    override fun onBottomActionMenuCreated(view: BottomActionMenuView) {
+        swipeRefreshLayout?.isRefreshing = false
+        swipeRefreshLayout?.isEnabled = false
 
+        view.apply {
+            toggleItemVisibility(R.id.cab_decompress, getSelectedFileDirItems().map { it.path }.any { it.isZipFile() } )
+            toggleItemVisibility(R.id.cab_confirm_selection, isPickMultipleIntent)
+            toggleItemVisibility(R.id.cab_copy_path, isOneItemSelected())
+            toggleItemVisibility(R.id.cab_open_with, isOneItemSelected())
+            toggleItemVisibility(R.id.cab_open_as, isOneItemSelected())
+            toggleItemVisibility(R.id.cab_set_as, isOneItemSelected())
+            toggleItemVisibility(R.id.cab_create_shortcut, isOneItemSelected())
             checkHideBtnVisibility(this)
         }
     }
@@ -136,11 +139,6 @@ class ItemsAdapter(
     override fun getItemSelectionKey(position: Int) = listItems.getOrNull(position)?.path?.hashCode()
 
     override fun getItemKeyPosition(key: Int) = listItems.indexOfFirst { it.path.hashCode() == key }
-
-    override fun onActionModeCreated() {
-        swipeRefreshLayout?.isRefreshing = false
-        swipeRefreshLayout?.isEnabled = false
-    }
 
     override fun onActionModeDestroyed() {
         swipeRefreshLayout?.isEnabled = true
@@ -181,7 +179,7 @@ class ItemsAdapter(
 
     private fun isOneFileSelected() = isOneItemSelected() && getItemWithKey(selectedKeys.first())?.isDirectory == false
 
-    private fun checkHideBtnVisibility(menu: Menu) {
+    private fun checkHideBtnVisibility(view: BottomActionMenuView) {
         var hiddenCnt = 0
         var unhiddenCnt = 0
         getSelectedFileDirItems().map { it.name }.forEach {
@@ -192,8 +190,8 @@ class ItemsAdapter(
             }
         }
 
-        menu.findItem(R.id.cab_hide).isVisible = unhiddenCnt > 0
-        menu.findItem(R.id.cab_unhide).isVisible = hiddenCnt > 0
+        view.toggleItemVisibility(R.id.cab_hide, unhiddenCnt > 0)
+        view.toggleItemVisibility(R.id.cab_unhide, unhiddenCnt > 0)
     }
 
     private fun confirmSelection() {

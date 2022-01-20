@@ -16,6 +16,7 @@ import com.simplemobiletools.commons.extensions.getTextSize
 import com.simplemobiletools.commons.extensions.getTimeFormat
 import com.simplemobiletools.commons.helpers.getFilePlaceholderDrawables
 import com.simplemobiletools.commons.views.MyRecyclerView
+import com.simplemobiletools.commons.views.bottomactionmenu.BottomActionMenuView
 import com.simplemobiletools.filemanager.pro.R
 import com.simplemobiletools.filemanager.pro.activities.SimpleActivity
 import com.simplemobiletools.filemanager.pro.extensions.config
@@ -44,7 +45,7 @@ class DecompressItemsAdapter(activity: SimpleActivity, var listItems: MutableLis
 
     override fun getActionMenuId() = 0
 
-    override fun prepareActionMode(menu: Menu) {}
+    override fun onBottomActionMenuCreated(view: BottomActionMenuView) {}
 
     override fun actionItemPressed(id: Int) {}
 
@@ -55,8 +56,6 @@ class DecompressItemsAdapter(activity: SimpleActivity, var listItems: MutableLis
     override fun getItemSelectionKey(position: Int) = 0
 
     override fun getItemKeyPosition(key: Int) = 0
-
-    override fun onActionModeCreated() {}
 
     override fun onActionModeDestroyed() {}
 
