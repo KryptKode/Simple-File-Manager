@@ -405,7 +405,7 @@ class ItemsAdapter(
                         files.forEach { sourceFileDir ->
                             val sourcePath = sourceFileDir.path
                             if (activity.isRestrictedSAFOnlyRoot(sourcePath) && activity.getDoesFilePathExist(sourcePath)) {
-                                activity.deleteFile(sourceFileDir, true) {
+                                activity.deleteFile(sourceFileDir, allowDeleteFolder = true, isDeletingMultipleFiles = false) {
                                     listener?.refreshFragment()
                                     activity.runOnUiThread {
                                         finishActMode()
@@ -417,7 +417,7 @@ class ItemsAdapter(
                                     sourceFile.list()?.isEmpty() == true && sourceFile.getProperSize(true) == 0L && sourceFile.getFileCount(true) == 0
                                 ) {
                                     val sourceFolder = sourceFile.toFileDirItem(activity)
-                                    activity.deleteFile(sourceFolder, true) {
+                                    activity.deleteFile(sourceFolder, allowDeleteFolder = true, isDeletingMultipleFiles = false) {
                                         listener?.refreshFragment()
                                         activity.runOnUiThread {
                                             finishActMode()
@@ -574,7 +574,7 @@ class ItemsAdapter(
                                     }
                                 }
                             } else {
-                                activity.deleteFileBg(fileDirItem, false) {
+                                activity.deleteFileBg(fileDirItem, false, false) {
                                     if (it) {
                                         extractEntry(newPath, entry, zipInputStream)
                                     } else {
